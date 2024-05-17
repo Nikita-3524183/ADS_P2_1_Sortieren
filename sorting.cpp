@@ -8,36 +8,36 @@ namespace sorting {
 	// QuickSort *
 	//************     
 
-	int partition(std::vector<int>& arr, int left, int right) 
+	int partition(std::vector<int>& arr, int l, int r) 
 	{
-		int pivot = arr[right]; 
-		int i = left-1;
+		int p = arr[r]; 
+		int i = l-1;
 
-		for (int j=left;j<=right-1;j++)	// Alle Elemente < Pivot links anordnen
+		for (int j=l;j<=r-1;j++)	// Elemente die kleiner sind links von Pivot
 		{
-			if (arr[j] < pivot) 
+			if (arr[j] < p) 
 			{
 				i++;
 				swap(arr[i], arr[j]);
 			}
 		}
-		swap(arr[i+1], arr[right]);	// Position des Pivots korrigieren
+		swap(arr[i+1], arr[r]);	// Pivot korrekt platzieren
 
 		return i+1;
 	}
 
-	void QuickSort(vector<int>& arr, int left, int right)
+	void QuickSort(vector<int>& arr, int l, int r)
 	{
-		int n0 = 100;
+		int n = 100;
 
-		// Insertion sort falls Array größer ist als Threshold
-		if(right-left+1 <= n0)	
+		// Insertion sort sobald schneller
+		if(r-l+1 <= n)	
 		{
-			for(int i=left+1; i<=right; i++)
+			for(int i=l+1; i<=r; i++)
 			{
 				int tmp = arr[i];
 				int j = i-1;
-				while(j >= left && arr[j] > tmp)
+				while(j >= l && arr[j] > tmp)
 				{
 					arr[j+1] = arr[j];
 					j--;
@@ -48,12 +48,12 @@ namespace sorting {
 		// Quicksort
 		else				
 		{
-			// Array wird anhand eines Pivots sortiert
-			int pivot = partition(arr,left,right);
+			// Array am pivot sortieren
+			int p = partition(arr,l,r);
 
-			//Beide Subarrays rekursiv sortieren
-			QuickSort(arr,left,pivot-1);	
-			QuickSort(arr,pivot+1,right);
+			//Subarrays sortieren
+			QuickSort(arr,l,p-1);	
+			QuickSort(arr,p+1,r);
 		}
 	}
 
