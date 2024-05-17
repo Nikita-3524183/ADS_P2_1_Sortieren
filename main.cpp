@@ -37,7 +37,7 @@ void benchmark_quicksort() {
 
   //file stream
   ofstream quicksort_measurement;
-  quicksort_measurement.open("quicksort.txt", ios::out | ios::app);
+  quicksort_measurement.open("quicksort_O3.txt", ios::out | ios::app);
 
   //benchmark parameters / variables
   double dtime;
@@ -80,7 +80,7 @@ void benchmark_mergesort()
 {
 	//file stream
 	ofstream mergesort_measurement;
-	mergesort_measurement.open("mergesort.txt", ios::out | ios::app);
+	mergesort_measurement.open("mergesort_O3.txt", ios::out | ios::app);
 
 	//benchmark parameters / variables
 	//double dtime;
@@ -126,7 +126,7 @@ void benchmark_heapsort()
 {
 	//file stream
 	ofstream heapsort_measurement;
-	heapsort_measurement.open("heapsort.txt", ios::out | ios::app);
+	heapsort_measurement.open("heapsort_O3.txt", ios::out | ios::app);
 
 	//benchmark parameters / variables
 	//double dtime;
@@ -170,7 +170,7 @@ void benchmark_shellsort_2n()
 {
 	//file stream
 	ofstream shellsort_measurement;
-	shellsort_measurement.open("shellsort_2n.txt", ios::out | ios::app);
+	shellsort_measurement.open("shellsort_2n_O3.txt", ios::out | ios::app);
 
 	//benchmark parameters / variables
 	//double dtime;

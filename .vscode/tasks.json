@@ -5,8 +5,8 @@
       "label": "C/C++: Compile",
       "command": "g++.exe",
       "args": [
-        "-Og",        
-        "-g",
+        "-O3",        
+        //"-g",
         "-std=c++17",
         "-fdiagnostics-color=always",
         "-Wall",

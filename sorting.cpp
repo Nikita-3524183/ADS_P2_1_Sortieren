@@ -28,7 +28,7 @@ namespace sorting {
 
 	void QuickSort(vector<int>& arr, int left, int right)
 	{
-		int n0 = 50;
+		int n0 = 100;
 
 		// Insertion sort falls Array größer ist als Threshold
 		if(right-left+1 <= n0)	
