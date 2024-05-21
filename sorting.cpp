@@ -61,62 +61,61 @@ namespace sorting {
 	// MergeSort *
 	//************
 
-	void Merge(vector<int>& a, vector<int>& b, int low, int pivot, int high)
+	void Merge(vector<int>& a, vector<int>& b, int l, int p, int h)
 	{
-		int lEnd = pivot-1;
-		int bPos = low;
-		int n = high-low+1;
+		int lEnd = p-1;
+		int bPos = l;
+		int n = h-l+1;
 
-		// Beide Subarrays mithilfe von b mergen
-		while(low <= lEnd && pivot <= high)	
+		// Subarray via b mergen
+		while(l <= lEnd && p <= h)	
 		{
-			// Kleinstes Element wird b hinzugefügt
-			if(a[low] <= a[pivot])	
+			// kleineres Element wird in b geschrieben
+			if(a[l] <= a[p])	
 			{
-				b[bPos] = a[low];
-				low++;
+				b[bPos] = a[l];
+				l++;
 			}
 			else
 			{
-				b[bPos] = a[pivot];
-				pivot++;
+				b[bPos] = a[p];
+				p++;
 			}
 
 			bPos++;
 		}
 
-		// Kopieren der verbleibenden Elemente aus dem ersten Subarray, falls vorhanden
-		while(low <= lEnd)	
-			b[bPos++] = a[low++];
+		// koppieren der verbleibenden Elemente
+		while(l <= lEnd)	
+			b[bPos++] = a[l++];
+	
+		while(p <= h)
+			b[bPos++] = a[p++];
 		
-		// Kopieren der verbleibenden Elemente aus dem zweiten Subarray, falls vorhanden
-		while(pivot <= high)
-			b[bPos++] = a[pivot++];
-		
-		// Kopieren zurück in das ursprüngliche Array
-		for(int i=high-n+1;i<=high;i++)
+		// ins ursprüngliche Array kopieren
+		for(int i=h-n+1;i<=h;i++)
 			a[i] = b[i];
 		
 	}
 
-	void MergeSort(vector<int>& a, vector<int>& b, int low, int high)
+	void MergeSort(vector<int>& a, vector<int>& b, int l, int h)
 	{
-		if(low < high)
+		if(l < h)
 		{
-			int pivot = (low + high) / 2;
-			MergeSort(a,b,low,pivot);		// Das Array wird rekursiv in zwei Subarrays geteilt
-			MergeSort(a,b,pivot+1,high);
-			Merge(a,b,low,pivot+1,high);
+			int pivot = (l + h) / 2;
+			MergeSort(a,b,l,pivot);		// linke Hälfte sortieren
+			MergeSort(a,b,pivot+1,h); 	// rechte Hälfte sortieren
+			Merge(a,b,l,pivot+1,h); 	// beide Hälften mergen
 		}
 	}
 
-	void natMerge(vector<int> &a, vector<int> &b, int left, int middle, int right) 
+	void natMerge(vector<int> &a, vector<int> &b, int l, int m, int r) 
 	{
-		int i = left;
-		int j = middle + 1;
-		int k = left;
+		int i = l;
+		int j = m + 1;
+		int k = l;
 
-		while (i <= middle && j <= right) 	// Beide subarrays mithilfe von b mergen
+		while (i <= m && j <= r) 	//Merge von beiden Subarrays via b
 		{
 			if (a[i] <= a[j])
 				b[k++] = a[i++];
@@ -124,17 +123,16 @@ namespace sorting {
 				b[k++] = a[j++];
 		}
 
-		// Kopieren der verbleibenden Elemente aus dem ersten Subarray, falls vorhanden
-		while (i <= middle) 	
+		// Falls Elemente in einem Subarray übrig sind
+		while (i <= m) 	
 			b[k++] = a[i++];
 		
-		// Kopieren der verbleibenden Elemente aus dem zweiten Subarray, falls vorhanden
-		while (j <= right) 		
+		while (j <= r) 		
 			b[k++] = a[j++];
 		
 
 		// Kopieren zurück in das ursprüngliche Array
-		for (int i = left; i <= right; i++)
+		for (int i = l; i <= r; i++)
 			a[i] = b[i];
 		
 	}
@@ -147,7 +145,7 @@ namespace sorting {
 			vector<int> runs;
 			int i = 0;
 
-			// Alle Runs im Array finden
+			// Alle Teil-Sortierten Runs finden und speichern
 			while (i < n) 
 			{
 				int j = i + 1;
@@ -157,27 +155,29 @@ namespace sorting {
 				i = j;
 			}
 
-			// Falls es nur ein Run gibt, ist das Array sortiert
+			// vector bereits sortiert
 			if (runs.size() == 1)
 				return;
 
 			vector<int> newRuns;
 
-			// Benachbarte Runs mergen
+			// Runs mergen / +2 da immer 2 Runs zusammengeführt werden
 			for (int i=0;i<runs.size();i+=2) 
 			{
 				int left = 0;
+				// start für jetzigen Run-Merge berechnen
 				for (int j=0;j<i;j++)
 					left += runs[j];
 
 				int middle = left + runs[i] - 1;
 				int right = min(left + runs[i] + runs[i + 1] - 1, n - 1);
 
+				// Mergen der Runs und speichern der neuen Run-Länge
 				natMerge(a, b, left, middle, right);
 				newRuns.push_back(right - left + 1);
 			}
 
-			// Falls die Anzahl an Runs ungerade ist, wird die letzte auch hinzugefügt
+			// Falls die Anzahl an Runs ungerade ist, wird die letzte auch hinzugefügt da sie nicht gemerged wurde
 			if (runs.size() % 2 != 0)
 				newRuns.push_back(runs.back());
 
@@ -195,11 +195,11 @@ namespace sorting {
 		int l = 2 * i + 1; // left = 2*i + 1
 		int r = 2 * i + 2; // right = 2*i + 2
 	
-		// Falls linkes Kindknoten größer als Root ist
+		// Falls linker Kindknoten größer als Root ist
 		if (l < n && a[l] > a[largest])
 			largest = l;
 	
-		// Falls rechtes Kindknoten größer ist
+		// Falls rechter Kindknoten größer ist
 		if (r < n && a[r] > a[largest])
 			largest = r;
 	
@@ -215,11 +215,13 @@ namespace sorting {
 
 	void HeapSort(vector<int> &a, int n) 
 	{
+		// Erstelle Max-Heap
 		for(int i=n/2-1;i>=0;i--)
 		{
 			heapify(a,n,i);
 		}
 		
+		// Entferne Elemente aus dem Heap und füge sie ans Ende des Arrays ein
 		for(int i=n-1;i>0;i--)
 		{
 			swap(a[0],a[i]);
@@ -236,7 +238,7 @@ namespace sorting {
 	{
 
 		int gap = 1;
-		// Hibbard-Folge wird implementiert
+		// gap wird der Hibbard-Folge entsprechend vergrößert, größe des Arrays wird nicht überschritten
 		while (gap < n)
 		{
 			gap = 2*gap+1;
@@ -244,10 +246,10 @@ namespace sorting {
 
 		while (gap >= 1)
 		{
-			// Abstand wird der Hibbard-Folge entsprechend verkleinert
+			// Abbstand verkleinern
 			gap = (gap-1)/2;
 
-			// Insertion sort wird mit dem Abstand gap durchgeführt
+			// Insertion Sort mit gap
 			for (int i=gap;i<n;i++)
 			{
 				int key = a[i];
